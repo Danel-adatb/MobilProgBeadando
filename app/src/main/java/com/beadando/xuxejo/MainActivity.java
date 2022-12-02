@@ -4,13 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.loader.content.AsyncTaskLoader;
 import androidx.room.Room;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -32,6 +30,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.beadando.xuxejo.dao.MegvehetoAutoDB;
+import com.beadando.xuxejo.Employees;
 import com.beadando.xuxejo.model.MegvehetoAuto;
 
 import java.io.BufferedReader;
@@ -255,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
             String row = "";
 
             while((row = reader.readLine()) != null) {
-                System.out.println(row);
+                System.out.println("From File: "+row);
             }
 
         } catch (FileNotFoundException e) {
@@ -275,10 +274,16 @@ public class MainActivity extends AppCompatActivity {
                 MegvehetoAuto megvehetoAuto = new MegvehetoAuto(car.getText().toString(), color.getText().toString(), hp.getText().toString());
 
                 db.megvehetoAutoDao().insertAll(megvehetoAuto);
-                System.out.println(db.megvehetoAutoDao().getAll());
+                System.out.println("DB: "+db.megvehetoAutoDao().getAll());
             }
         });
 
+        startActivity(intent);
+    }
+
+    //HTTP
+    public void Employees(View view) {
+        Intent intent = new Intent(MainActivity.this, Employees.class);
         startActivity(intent);
     }
 }

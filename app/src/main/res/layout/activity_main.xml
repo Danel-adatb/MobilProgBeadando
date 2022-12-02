@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
+        android:minHeight="48dp"
         android:text="Color" />
 
     <EditText
@@ -30,6 +31,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
+        android:minHeight="48dp"
         android:text="HorsePower" />
 
     <Button
@@ -47,6 +49,13 @@
         android:enabled="false"
         android:onClick="Camera"
         android:text="Take Picture" />
+
+    <Button
+        android:id="@+id/empButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="Employees"
+        android:text="Employee" />
 
     <LinearLayout
         android:layout_width="match_parent"

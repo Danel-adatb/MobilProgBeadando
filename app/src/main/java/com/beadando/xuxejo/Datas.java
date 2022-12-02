@@ -3,22 +3,29 @@ package com.beadando.xuxejo;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.beadando.xuxejo.dao.MegvehetoAutoDB;
 import com.beadando.xuxejo.model.MegvehetoAuto;
-import com.google.android.material.snackbar.Snackbar;
+import com.beadando.xuxejo.recycleview.CostumAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
 import android.widget.TextView;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.beadando.xuxejo.databinding.ActivityDatasBinding;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Datas extends AppCompatActivity {
+    RecyclerView recyclerView;
+    List<MegvehetoAuto> modelList;
+    CostumAdapter costumAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +35,17 @@ public class Datas extends AppCompatActivity {
         Intent intent = getIntent();
         MegvehetoAuto megvehetoAuto = (MegvehetoAuto) intent.getSerializableExtra("megvehetoAuto");
 
+        //TextView
         TextView text = findViewById(R.id.textView);
         text.setText("Car Added: "+ megvehetoAuto.getCar());
+
+        //RecycleView
+        recyclerView = findViewById(R.id.recycler_main);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        modelList = new ArrayList<>();
+        modelList.add(new MegvehetoAuto(megvehetoAuto.getCar(), megvehetoAuto.getColor(), megvehetoAuto.getHp()));
+        costumAdapter = new CostumAdapter(this, modelList);
+        recyclerView.setAdapter(costumAdapter);
     }
 }
