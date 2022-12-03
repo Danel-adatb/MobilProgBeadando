@@ -29,9 +29,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.beadando.xuxejo.dao.MegvehetoAutoDB;
-import com.beadando.xuxejo.Employees;
-import com.beadando.xuxejo.model.MegvehetoAuto;
+import com.beadando.xuxejo.database.AppDatabase;
+import com.beadando.xuxejo.database.Car;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,7 +44,6 @@ import java.io.OutputStreamWriter;
 
 
 public class MainActivity extends AppCompatActivity {
-    MegvehetoAutoDB db;
     Button cameraButton;
     int permReqCode = 1;
     Button startButton;
@@ -62,9 +60,8 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setVmPolicy(builder.build());
 
         //Komponensek közötti kommunikáció
-        EditText newField = findViewById(R.id.car);
-        db = Room.databaseBuilder(this, MegvehetoAutoDB.class, "forSale database").build();
-        newField.addTextChangedListener(new TextWatcher() {
+        EditText name = findViewById(R.id.car);
+        name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -190,14 +187,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Komponensek közötti kommunikáció - másik adattárolás
+    //Komponensek közötti kommunikáció - másik adattárolás (File, DB)
     public void NewScreen(View view) {
-        EditText car = findViewById(R.id.car);
+        //DB
+        EditText name = findViewById(R.id.car);
         EditText color = findViewById(R.id.color);
         EditText hp = findViewById(R.id.hp);
 
+        //DB
+        AppDatabase db = AppDatabase.getDbInstance(this.getApplicationContext());
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                Car car = new Car(name.getText().toString(), color.getText().toString(), hp.getText().toString());
+                System.out.println("car: "+car);
+                db.carDAO().insertCar(car);
+                System.out.println("DB: "+db.carDAO().getAllCars());
+            }
+        });
+
+        //File
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit().putString("Car", car.getText().toString());
+        SharedPreferences.Editor editor = sharedPreferences.edit().putString("Car", name.getText().toString());
         editor.apply();
 
         String oldname = sharedPreferences.getString("Car", "Not given yet!");
@@ -205,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(MainActivity.this, Datas.class);
 
-        MegvehetoAuto megvehetoAuto = new MegvehetoAuto(car.getText().toString(), color.getText().toString(), hp.getText().toString());
+        Car megvehetoAuto = new Car(name.getText().toString(), color.getText().toString(), hp.getText().toString());
 
         intent.putExtra("megvehetoAuto", megvehetoAuto);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -213,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         //Másik adattárolás
         String fileName = "data.txt";
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(car.getText().toString());
+        stringBuilder.append(name.getText().toString());
         stringBuilder.append(", ");
         stringBuilder.append(color.getText().toString());
         stringBuilder.append(", ");
@@ -262,21 +274,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        //DB
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                EditText car = findViewById(R.id.car);
-                EditText color = findViewById(R.id.color);
-                EditText hp = findViewById(R.id.hp);
-
-                MegvehetoAuto megvehetoAuto = new MegvehetoAuto(car.getText().toString(), color.getText().toString(), hp.getText().toString());
-
-                db.megvehetoAutoDao().insertAll(megvehetoAuto);
-                System.out.println("DB: "+db.megvehetoAutoDao().getAll());
-            }
-        });
 
         startActivity(intent);
     }

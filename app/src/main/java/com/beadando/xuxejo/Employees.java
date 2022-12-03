@@ -4,13 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.beadando.xuxejo.model.Employee;
 import com.beadando.xuxejo.model.NewEmployee;
 import com.beadando.xuxejo.model.response.EmployeeResponse;
 import com.beadando.xuxejo.model.response.NewEmployeeResponse;
 import com.beadando.xuxejo.service.EmployeeService;
-import com.beadando.xuxejo.ui.main.EmployeesFragment;
-import com.beadando.xuxejo.ui.main.EmployeesViewModel;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,12 +20,6 @@ public class Employees extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_employees);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, EmployeesFragment.newInstance())
-                    .commitNow();
-        }
 
         //Calling API
         Retrofit retrofit = new Retrofit.Builder().
@@ -40,7 +31,7 @@ public class Employees extends AppCompatActivity {
         get.enqueue(new Callback<EmployeeResponse>() {
             @Override
             public void onResponse(Call<EmployeeResponse> call, Response<EmployeeResponse> response) {
-                System.out.println(response.body().getData());
+                System.out.println(response.body().getData().toString());
             }
 
             @Override

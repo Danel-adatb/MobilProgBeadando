@@ -1,4 +1,4 @@
-package com.beadando.xuxejo.model;
+package com.beadando.xuxejo.database;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -6,33 +6,30 @@ import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-//Komponensek közötti kommunikáció - AB
-@Entity(tableName = "forSale")
-public class MegvehetoAuto implements Serializable {
+@Entity(tableName = "carsForSale")
+public class Car implements Serializable {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
-    @ColumnInfo(name = "car_name")
-    private String car;
+    @ColumnInfo(name = "name")
+    private String name;
+    @ColumnInfo(name = "color")
     private String color;
+    @ColumnInfo(name = "hp")
     private String hp;
 
-    public MegvehetoAuto() {
-
-    }
-
-    public MegvehetoAuto(String car, String color, String hp) {
-        this.car = car;
+    public Car(String name, String color, String hp) {
+        this.name = name;
         this.color = color;
         this.hp = hp;
     }
 
-    public String getCar() {
-        return car;
+    public String getName() {
+        return name;
     }
 
-    public void setCar(String car) {
-        this.car = car;
+    public void setName(String car) {
+        this.name = name;
     }
 
     public String getColor() {
@@ -53,8 +50,8 @@ public class MegvehetoAuto implements Serializable {
 
     @Override
     public String toString() {
-        return "MegvehetoAuto{" +
-                "car='" + car + '\'' +
+        return "Car{" +
+                "name='" + name + '\'' +
                 ", color='" + color + '\'' +
                 ", hp=" + hp +
                 '}';
